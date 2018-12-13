@@ -1,0 +1,39 @@
+mixin menu(tf_menu)
+  each item in tf_menu
+    li.nav-item("class"=(activePage == item.href ? "active" : ""))
+      a.nav-link(href=item.href+'.html')= item.pageLink
+      // dans le cas ou li a la class active
+      if (activePage == item.href)
+        span.sr-only (current)
+block config
+  - var navCls = navClasses
+  - var logSize = "120px"
+
+  
+nav.navbar.navbar-expand-lg.fixed-top(class=navCls)
+  .container
+    a.navbar-brand(href='index.html')
+      img.d-none.d-sm-block(src=logo, width=logSize alt="", srcset="")
+      img.d-block.d-sm-none(src="assets/images/logo2.png", width=logSize alt="", srcset="")
+    button.navbar-toggler(
+      type='button',
+      data-toggle='collapse',
+      data-target='#tf_navbar',
+      aria-controls='tf_navbar',
+      aria-expanded='false',
+      aria-label='Toggle navigation')
+      svg(viewbox='0 0 30 30', xmlns='http://www.w3.org/2000/svg')
+        path(stroke='rgba(0, 0, 0, 0.5)', stroke-width='2', stroke-linecap='round', stroke-miterlimit='10', d='M4 7h22M4 15h22M4 23h22')
+
+    #tf_navbar.collapse.navbar-collapse
+      ul.navbar-nav.ml-auto
+        +menu([
+          {'pageLink':"Accueil", 'href': "index"},
+          {'pageLink':"Appel d'offre", 'href': "rechercheAO"},
+          {'pageLink':"profile", 'href': "profile"}
+
+        ])
+      
+        li.nav-item
+          a.nav-link.text-primary(href='inscription.html') inscription
+

@@ -1,0 +1,40 @@
+@import "theme"
+.navbar
+  z-index: 10
+  width: 100%
+  transition: all 0.3s ease
+  padding: 45px 0
+  .nav-link
+    color: white
+    text-transform: capitalize
+    font-weight: 500
+    letter-spacing: 1px
+    outline: 0
+  .nav-item
+    padding: 5px 15px 
+  .nav-item.active,
+  .nav-item:hover
+    position: relative
+    &::after
+      position: absolute
+      left: 0
+      right: 0
+      height: 2px
+      bottom: 0
+      background: $primary 
+      content: "  "
+      transition: all 0.5s ease
+  .navbar-toggler
+    svg
+      width: 30px
+      path
+        stroke: $primary
+  &.navbar-light
+    .nav-link
+      color: #000
+@media screen and (max-width: 578px)
+  .navbar
+    background: #fff
+    padding: 10px
+    .nav-link
+      color: rgba(0,0,0,0.5)
