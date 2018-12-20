@@ -1,7 +1,27 @@
+@import "custom/reset"
 @import 'custom/theme'
-*
+*, *:after, *:before
   box-sizing: border-box
+  font-family: sans-serif !important
+.content
+  background: #efefef
+  clear: both
+.mx-auto
+  margin-left: 50%
+  transform: translateX(-50%)
+
+h1
+  font-size: 40px
+  line-height: 50px
+  margin-top: 30px
+  margin-bottom: 30px
+body
+  overflow: visible
+  clear: both
 //----------------------------------------------
                   Customs
 //----------------------------------------------
+
 @import "custom/_grid"
+@import "custom/menu"
+@import "custom/slider"

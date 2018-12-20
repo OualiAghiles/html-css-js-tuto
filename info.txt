@@ -1,0 +1,13 @@
+fonts
+    roboto / text (14fs /30ls / 22px lh) on slider (14fs /50ls / 24px lh) - menu 
+    Playfair Display / title 32px / 10px lettre spacing
+    Hammersmith One /btns
+spaces
+    section / 70px
+colors
+    primary / #00e0d0
+    secondary / #413d4b
+    sub_title / #2f2d35
+    text / 333333
+underline title
+	width / 50px

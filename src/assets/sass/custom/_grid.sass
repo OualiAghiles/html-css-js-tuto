@@ -5,9 +5,11 @@
   position: relative
   min-height: 1px
   padding: 0 $gutter*0.5
-  background: rgba(#000,0.2)
-  border: 1px solid rgba(#000,0.35)
-
+.content
+  width: 1140px
+  margin: auto
+  padding-left: 15px
+  padding-right: 15px
 .row
   margin: 0 $gutter * -0.5
   *zoom: 1
@@ -28,9 +30,11 @@
   @include columns()
   .col-m-#{$i}, .col-l-#{$i}, .col-#{$i}
     @extend %col
-
 @media only screen and (min-width: $large)
   @include columns('-l')
 @media only screen and (min-width: $medium)
   @for $i from 1 through $columns
     @include columns('-m')
+@media only all and  (max-width: $large - 1px)
+  .content
+    width: 100%
