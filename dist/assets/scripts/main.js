@@ -5,12 +5,14 @@ class Slider {
      * @param {object} options
      * @param {object} options.slidesToScroll "Nombre d'element a slider"
      * @param {object} options.slidesVisible "Nombre d'element Visible dans une vue"
+     * @param {boolean} options.loop permet de boucler en fin de slides ( oui ou non ?)
      */
     constructor (element, options = {}) {
         this.element = element
         this.options = Object.assign({}, {
             slidesToScroll: 1,
-            slidesVisible: 1
+            slidesVisible: 1,
+            loop: false
         }, options)
         let children = [].slice.call(element.children)
         this.currentitem = 0
@@ -39,7 +41,11 @@ class Slider {
 
     createNavigation () {
         let nextButton = this.createDivWithClass('slider_next')
+        // let arrowRight = this.createDivWithClass('material-icons')
         let prevButton = this.createDivWithClass('slider_prev')
+        // let arrowLeft = this.createDivWithClass("material-icons")
+        // nextButton.appendChild(arrowRight)
+        // prevButton.appendChild(arrowLeft)
         this.root.appendChild(nextButton)
         this.root.appendChild(prevButton)
         nextButton.addEventListener('click', this.next.bind(this))
@@ -58,6 +64,11 @@ class Slider {
      * @param {number} index
      */
     gotToItem (index) {
+        if (index < 0) {
+            index = this.items.length - this.options.slidesVisible
+        } else if (index >= this.items.length || this.items[this.currentitem + this.options.slidesVisible] === undefined) {
+            index = 0
+        }
         let translateX = index * -100 / this.items.length
         this.container.style.transform = 'translate3d('+ translateX +'%, 0, 0)'
         this.currentitem = index
