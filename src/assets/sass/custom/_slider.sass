@@ -2,43 +2,44 @@
 
   width: 100%
   height: 100vh
-  position: relative
   display: block
   .slider_content
     height: 100%
+    overflow: hidden
   .slider_container
-    position: relative
+    transition: transform 0.4s ease-in-out
+    transform: translate3D(0,0,0)
     height: 100%
     &::after
       content: ''
       display: table
       clear: both
   .slider_item
+    position: relative
     background: url('../images/background slider.png')
     background-repeat: no-repeat
     background-position: top center
     background-size: cover
     float: left
     height: 100%
-    width: 100%
-  .content
-    position: absolute
-    top: 50%
-    left: 50%
-    transform: translate(-50%, -50%)
-    color: #ffffff
-    h1
-      font-family: $title_font !important
-      font-size: 40px
-      font-weight: bolder
-      text-transform: capitalize
-      text-align: center
-    p
-      font-size: 14px
-      line-height: 24px
-      letter-spacing: 1px
-      text-align: center
-      margin-bottom: 55px
+    .content
+      //position: absolute
+      //top: 50%
+      //left: 50%
+      //transform: translate(-50%, -50%)
+      color: #ffffff
+      h1
+        font-family: $title_font !important
+        font-size: 40px
+        font-weight: bolder
+        text-transform: capitalize
+        text-align: center
+      p
+        font-size: 14px
+        line-height: 24px
+        letter-spacing: 1px
+        text-align: center
+        margin-bottom: 55px
   .btn
     border: 0px solid transparent
     background: none
@@ -57,3 +58,19 @@
         background: $primary
         color: #ffffff
 
+  .slider_next, .slider_prev
+    position: absolute
+    top: 50%
+    width: 50px
+    height: 50px
+    right: 0
+    content: '>'
+    padding: 15px
+    background: #ffffff
+    color: $primary
+    transform: translateY(-50%)
+    cursor: pointer
+  .slider_prev
+    content: '<'
+    right: auto
+    left: 0
