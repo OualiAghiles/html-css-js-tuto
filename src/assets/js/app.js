@@ -1,18 +1,26 @@
 class Slider {
+
+    /**
+     * This callback is displayed as part of the Requester class.
+     * @callback moveCallback
+     * @param {number} index
+     */
+
+
     /**
      *
      * @param {HTMLElements} element
      * @param {object} options
-     * @param {object} options.slidesToScroll "Nombre d'element a slider"
-     * @param {object} options.slidesVisible "Nombre d'element Visible dans une vue"
-     * @param {boolean} options.loop permet de boucler en fin de slides ( oui ou non ?)
+     * @param {object} [options.slidesToScroll=1] "Nombre d'element a slider"
+     * @param {object} [options.slidesVisible=1] "Nombre d'element Visible dans une vue"
+     * @param {boolean} [options.loop=true] permet de boucler en fin de slides ( oui ou non ?)
      */
     constructor (element, options = {}) {
         this.element = element
         this.options = Object.assign({}, {
             slidesToScroll: 1,
             slidesVisible: 1,
-            loop: false
+            loop: true
         }, options)
         let children = [].slice.call(element.children)
         this.currentitem = 0
@@ -20,6 +28,7 @@ class Slider {
         this.container = this.createDivWithClass('slider_container')
         this.root.appendChild(this.container)
         this.element.appendChild(this.root)
+        this.onMoveCallbacs = []
         this.items = children.map((child) => {
             let item = this.createDivWithClass('slider_item')
             item.appendChild(child)
@@ -28,6 +37,7 @@ class Slider {
         })
         this.setStyle()
         this.createNavigation()
+        this.onMoveCallbacs.forEach(cb => cb(0))
     }
 
     /**
@@ -41,15 +51,26 @@ class Slider {
 
     createNavigation () {
         let nextButton = this.createDivWithClass('slider_next')
-        // let arrowRight = this.createDivWithClass('material-icons')
         let prevButton = this.createDivWithClass('slider_prev')
-        // let arrowLeft = this.createDivWithClass("material-icons")
-        // nextButton.appendChild(arrowRight)
-        // prevButton.appendChild(arrowLeft)
         this.root.appendChild(nextButton)
         this.root.appendChild(prevButton)
         nextButton.addEventListener('click', this.next.bind(this))
         prevButton.addEventListener('click', this.prev.bind(this))
+        if (this.options.loop === true)  {
+            return
+        }
+        this.onMove(index => {
+            if (index === 0 ) {
+                prevButton.classList.add('slider_prev--hidden')
+            } else {
+                prevButton.classList.remove('slider_prev--hidden')
+            }
+            if (this.items[this.currentitem + this.options.slidesVisible] === undefined){
+                nextButton.classList.add('slider_next--hidden')
+            } else {
+                nextButton.classList.remove('slider_next--hidden')
+            }
+        })
     }
 
     next () {
@@ -72,6 +93,15 @@ class Slider {
         let translateX = index * -100 / this.items.length
         this.container.style.transform = 'translate3d('+ translateX +'%, 0, 0)'
         this.currentitem = index
+        this.onMoveCallbacs.forEach(cb => cb(index))
+    }
+
+    /**
+     *
+     * @param {moveCallback} cb
+     */
+    onMove (cb) {
+        this.onMoveCallbacs.push(cb)
     }
 
     /**
@@ -89,7 +119,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
     new Slider(document.querySelector("#slider"),{
         slidesToScroll: 1,
-        slidesVisible: 1
+        slidesVisible: 1,
+        loop: true,
     })
 
 })
