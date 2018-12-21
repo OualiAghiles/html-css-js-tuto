@@ -14,21 +14,26 @@ class Slider {
      * @param {object} [options.slidesToScroll=1] "Nombre d'element a slider"
      * @param {object} [options.slidesVisible=1] "Nombre d'element Visible dans une vue"
      * @param {boolean} [options.loop=true] permet de boucler en fin de slides ( oui ou non ?)
+     * @param {boolean} [options.pagination=false] permet d'avoir une pagination pour les slides ( oui ou non ?)
      */
     constructor (element, options = {}) {
         this.element = element
         this.options = Object.assign({}, {
             slidesToScroll: 1,
             slidesVisible: 1,
-            loop: true
+            loop: true,
+            pagination: false
         }, options)
         let children = [].slice.call(element.children)
         this.currentitem = 0
+        this.isMobile = false
+        this.onMoveCallbacs = []
+
+        // Modification du DOM
         this.root  = this.createDivWithClass('slider_content')
         this.container = this.createDivWithClass('slider_container')
         this.root.appendChild(this.container)
         this.element.appendChild(this.root)
-        this.onMoveCallbacs = []
         this.items = children.map((child) => {
             let item = this.createDivWithClass('slider_item')
             item.appendChild(child)
@@ -37,16 +42,31 @@ class Slider {
         })
         this.setStyle()
         this.createNavigation()
+        this.createPagination()
+        this.onWindowResize()
         this.onMoveCallbacs.forEach(cb => cb(0))
+        window.addEventListener('resize', this.onWindowResize.bind((this)))
     }
 
     /**
      * Applique les bonnes dimentions aux élements du slider
      */
     setStyle () {
-        let ratio = this.items.length / this.options.slidesVisible
+        let ratio = this.items.length / this.slidesVisible
         this.container.style.width = (ratio * 100)+ "%"
-        this.items.forEach(item => item.style.width = ((100 / this.options.slidesVisible / ratio) + '%'))
+        this.items.forEach(item => item.style.width = ((100 / this.slidesVisible / ratio) + '%'))
+        for (let i = 0; i < this.items.length; i++){
+            this.items[i].style.backgroundImage = "url(https://picsum.photos/1600/1300?image="+ i + 5 +")"
+        }
+    }
+
+    onWindowResize () {
+        let mobile = window.innerWidth < 800
+        if (mobile ==! this.isMobile) {
+            this.isMobile = mobile
+            this.setStyle()
+            this.onMoveCallbacs.forEach(cb => cb(this.currentitem))
+        }
     }
 
     createNavigation () {
@@ -65,19 +85,22 @@ class Slider {
             } else {
                 prevButton.classList.remove('slider_prev--hidden')
             }
-            if (this.items[this.currentitem + this.options.slidesVisible] === undefined){
+            if (this.items[this.currentitem + this.slidesVisible] === undefined){
                 nextButton.classList.add('slider_next--hidden')
             } else {
                 nextButton.classList.remove('slider_next--hidden')
             }
         })
     }
+    createPagination () {
+
+    }
 
     next () {
-        this.gotToItem(this.currentitem + this.options.slidesToScroll)
+        this.gotToItem(this.currentitem + this.slidesToScroll)
     }
     prev () {
-        this.gotToItem(this.currentitem - this.options.slidesToScroll)
+        this.gotToItem(this.currentitem - this.slidesToScroll)
     }
 
     /**
@@ -85,9 +108,10 @@ class Slider {
      * @param {number} index
      */
     gotToItem (index) {
+
         if (index < 0) {
-            index = this.items.length - this.options.slidesVisible
-        } else if (index >= this.items.length || this.items[this.currentitem + this.options.slidesVisible] === undefined) {
+            index = this.items.length - this.slidesVisible
+        } else if (index >= this.items.length || (this.items[this.currentitem + this.options.slidesVisible] === undefined && index > this.currentitem)) {
             index = 0
         }
         let translateX = index * -100 / this.items.length
@@ -114,13 +138,20 @@ class Slider {
         div.setAttribute('class', className)
         return div
     }
+    get slidesToScroll () {
+        return this.isMobile ? 1 : this.options.slidesToScroll
+    }
+    get slidesVisible () {
+        return this.isMobile ? 1 : this.options.slidesVisible
+    }
 }
 document.addEventListener('DOMContentLoaded', function () {
 
     new Slider(document.querySelector("#slider"),{
-        slidesToScroll: 1,
-        slidesVisible: 1,
+        slidesToScroll: 2,
+        slidesVisible: 2,
         loop: true,
+        pagination: true
     })
 
 })
