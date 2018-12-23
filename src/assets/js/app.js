@@ -145,13 +145,30 @@ class Slider {
         return this.isMobile ? 1 : this.options.slidesVisible
     }
 }
+
+let cloneMenu = function () {
+    let menu = document.querySelector('.navigation ul')
+    let clone = menu.cloneNode(true)
+    clone.classList.add('mobile_menu')
+    return clone
+}
 document.addEventListener('DOMContentLoaded', function () {
 
     new Slider(document.querySelector("#slider"),{
         slidesToScroll: 2,
-        slidesVisible: 2,
+        slidesVisible: 3,
         loop: true,
         pagination: true
+    })
+    let mobileMenu = document.querySelector('.humberger')
+    let content = mobileMenu.parentNode.parentNode
+    content.appendChild(cloneMenu())
+    let mobileNav = document.querySelector('.mobile_menu')
+    mobileMenu.addEventListener('click', function (e) {
+        e.preventDefault()
+        this.classList.toggle('open')
+        console.log(mobileNav)
+        mobileNav.classList.toggle('open')
     })
 
 })
