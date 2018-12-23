@@ -15,6 +15,7 @@ class Slider {
      * @param {object} [options.slidesVisible=1] "Nombre d'element Visible dans une vue"
      * @param {boolean} [options.loop=true] permet de boucler en fin de slides ( oui ou non ?)
      * @param {boolean} [options.pagination=false] permet d'avoir une pagination pour les slides ( oui ou non ?)
+     * @param {boolean} [options.navigation=true] permet d'avoir une navigation pour les slides ( oui ou non ?)
      */
     constructor (element, options = {}) {
         this.element = element
@@ -22,7 +23,8 @@ class Slider {
             slidesToScroll: 1,
             slidesVisible: 1,
             loop: true,
-            pagination: false
+            pagination: true,
+            navigation: true
         }, options)
         let children = [].slice.call(element.children)
         this.currentitem = 0
@@ -41,8 +43,13 @@ class Slider {
             return item
         })
         this.setStyle()
-        this.createNavigation()
-        this.createPagination()
+        if (this.options.navigation) {
+            this.createNavigation()
+        }
+        if (this.options.pagination) {
+
+            this.createPagination()
+        }
         this.onWindowResize()
         this.onMoveCallbacs.forEach(cb => cb(0))
         window.addEventListener('resize', this.onWindowResize.bind((this)))
@@ -58,13 +65,11 @@ class Slider {
         for (let i = 0; i < this.items.length; i++){
             this.items[i].style.backgroundImage = "url(https://picsum.photos/1600/1300?image="+ i + 5 +")"
         }
-        let pagination = this.createDivWithClass('pagination')
+
         for (let i = 0; i < this.items.length; i++){
             this.items[i].style.backgroundImage = "url(https://picsum.photos/1600/1300?image="+ i + 5 +")"
-
-            pagination.appendChild(this.createDivWithClass('pagination_items'))
         }
-        this.root.appendChild(pagination)
+
     }
 
     onWindowResize () {
@@ -99,8 +104,30 @@ class Slider {
             }
         })
     }
-    createPagination () {
 
+    createPagination () {
+        let pagination = this.createDivWithClass('pagination')
+        let dots = []
+        this.root.appendChild(pagination)
+        // boucle pour generer les puce selon le nombre de slide existant
+        for (let i = 0; i < this.items.length; i= i + this.options.slidesToScroll){
+            // creation des puces selon le nombre de slide
+            let dot = this.createDivWithClass('pagination_dot')
+            // ajout de l'evenement au click en appelant la methode goToItem
+            dot.addEventListener('click', () => this.gotToItem(i))
+            // ajoute les puces dans la div pagination
+            pagination.appendChild(dot)
+            // ajout des puce dans le tableau
+            dots.push(dot)
+        }
+
+        this.onMove(index => {
+            let activeDot = dots[Math.floor(index / this.options.slidesToScroll)]
+            if (activeDot) {
+                dots.forEach(dot => dot.classList.remove('active'))
+                activeDot.classList.add('active')
+            }
+        })
     }
 
     next () {
@@ -160,13 +187,16 @@ let cloneMenu = function () {
     return clone
 }
 document.addEventListener('DOMContentLoaded', function () {
-
+    // slider
     new Slider(document.querySelector("#slider"),{
-        slidesToScroll: 1,
-        slidesVisible: 1,
-        loop: true,
-        pagination: true
-    })
+        slidesToScroll: 2,
+        slidesVisible: 2,
+        loop: false,
+        pagination: true,
+        navigation: true
+    });
+
+    // mobile menu
     let mobileMenu = document.querySelector('.humberger')
     let content = mobileMenu.parentNode.parentNode
     content.appendChild(cloneMenu())
