@@ -58,10 +58,17 @@ class Slider {
         for (let i = 0; i < this.items.length; i++){
             this.items[i].style.backgroundImage = "url(https://picsum.photos/1600/1300?image="+ i + 5 +")"
         }
+        let pagination = this.createDivWithClass('pagination')
+        for (let i = 0; i < this.items.length; i++){
+            this.items[i].style.backgroundImage = "url(https://picsum.photos/1600/1300?image="+ i + 5 +")"
+
+            pagination.appendChild(this.createDivWithClass('pagination_items'))
+        }
+        this.root.appendChild(pagination)
     }
 
     onWindowResize () {
-        let mobile = window.innerWidth < 800
+        let mobile = window.innerWidth < 900
         if (mobile ==! this.isMobile) {
             this.isMobile = mobile
             this.setStyle()
@@ -155,8 +162,8 @@ let cloneMenu = function () {
 document.addEventListener('DOMContentLoaded', function () {
 
     new Slider(document.querySelector("#slider"),{
-        slidesToScroll: 2,
-        slidesVisible: 3,
+        slidesToScroll: 1,
+        slidesVisible: 1,
         loop: true,
         pagination: true
     })
