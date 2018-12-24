@@ -40,23 +40,7 @@
         letter-spacing: 1px
         text-align: center
         margin-bottom: 55px
-  .btn
-    border: 0px solid transparent
-    background: none
-    &.btn-primary
-      color: $primary
-      font-family: $btn_font
-      font-size: 14px
-      padding: 10px 15px
-      border: 1px solid $primary
-      border-radius: 2px
-      letter-spacing: normal
-      font-weight: bold
-      text-decoration: none
-      transition: all 0.3s ease-in-out
-      &:hover
-        background: $primary
-        color: $secondary
+
 
   .slider_next, .slider_prev
     position: absolute
@@ -114,3 +98,21 @@
   .slider
     .pagination
       display: none
+.btn
+  border: 0px solid transparent
+  background: none
+  &.btn-primary
+    color: $primary
+    font-family: $btn_font
+    font-size: 14px
+    padding: 10px 15px
+    border: 1px solid $primary
+    border-radius: 2px
+    letter-spacing: normal
+    font-weight: bold
+    text-decoration: none
+    transition: all 0.3s ease-in-out
+    display: inline-block
+    &:hover
+      background: $primary
+      color: $secondary

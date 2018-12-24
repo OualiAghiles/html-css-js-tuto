@@ -63,12 +63,9 @@ class Slider {
         this.container.style.width = (ratio * 100)+ "%"
         this.items.forEach(item => item.style.width = ((100 / this.slidesVisible / ratio) + '%'))
         for (let i = 0; i < this.items.length; i++){
-            this.items[i].style.backgroundImage = "url(https://picsum.photos/1600/1300?image="+ i + 5 +")"
+            this.items[i].style.backgroundImage = "url(https://picsum.photos/1600/1300?image="+ i + 6 +")"
         }
 
-        for (let i = 0; i < this.items.length; i++){
-            this.items[i].style.backgroundImage = "url(https://picsum.photos/1600/1300?image="+ i + 5 +")"
-        }
 
     }
 
@@ -189,8 +186,8 @@ let cloneMenu = function () {
 document.addEventListener('DOMContentLoaded', function () {
     // slider
     new Slider(document.querySelector("#slider"),{
-        slidesToScroll: 2,
-        slidesVisible: 2,
+        slidesToScroll: 1,
+        slidesVisible: 1,
         loop: false,
         pagination: true,
         navigation: true
