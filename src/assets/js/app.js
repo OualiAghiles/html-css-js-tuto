@@ -1,5 +1,6 @@
 class Slider {
 
+
     /**
      * This callback is displayed as part of the Requester class.
      * @callback moveCallback
@@ -17,7 +18,7 @@ class Slider {
      * @param {boolean} [options.pagination=false] permet d'avoir une pagination pour les slides ( oui ou non ?)
      * @param {boolean} [options.navigation=true] permet d'avoir une navigation pour les slides ( oui ou non ?)
      */
-    constructor (element, options = {}) {
+    constructor(element, options = {}) {
         this.element = element
         this.options = Object.assign({}, {
             slidesToScroll: 1,
@@ -32,7 +33,7 @@ class Slider {
         this.onMoveCallbacs = []
 
         // Modification du DOM
-        this.root  = this.createDivWithClass('slider_content')
+        this.root = this.createDivWithClass('slider_content')
         this.container = this.createDivWithClass('slider_container')
         this.root.appendChild(this.container)
         this.element.appendChild(this.root)
@@ -58,43 +59,43 @@ class Slider {
     /**
      * Applique les bonnes dimentions aux élements du slider
      */
-    setStyle () {
+    setStyle() {
         let ratio = this.items.length / this.slidesVisible
-        this.container.style.width = (ratio * 100)+ "%"
+        this.container.style.width = (ratio * 100) + "%"
         this.items.forEach(item => item.style.width = ((100 / this.slidesVisible / ratio) + '%'))
-        for (let i = 0; i < this.items.length; i++){
-            this.items[i].style.backgroundImage = "url(https://picsum.photos/1600/1300?image="+ i + 6 +")"
+        for (let i = 0; i < this.items.length; i++) {
+            this.items[i].style.backgroundImage = "url(https://picsum.photos/1600/1300?image=" + i + 6 + ")"
         }
 
 
     }
 
-    onWindowResize () {
+    onWindowResize() {
         let mobile = window.innerWidth < 900
-        if (mobile ==! this.isMobile) {
+        if (mobile == !this.isMobile) {
             this.isMobile = mobile
             this.setStyle()
             this.onMoveCallbacs.forEach(cb => cb(this.currentitem))
         }
     }
 
-    createNavigation () {
+    createNavigation() {
         let nextButton = this.createDivWithClass('slider_next')
         let prevButton = this.createDivWithClass('slider_prev')
         this.root.appendChild(nextButton)
         this.root.appendChild(prevButton)
         nextButton.addEventListener('click', this.next.bind(this))
         prevButton.addEventListener('click', this.prev.bind(this))
-        if (this.options.loop === true)  {
+        if (this.options.loop === true) {
             return
         }
         this.onMove(index => {
-            if (index === 0 ) {
+            if (index === 0) {
                 prevButton.classList.add('slider_prev--hidden')
             } else {
                 prevButton.classList.remove('slider_prev--hidden')
             }
-            if (this.items[this.currentitem + this.slidesVisible] === undefined){
+            if (this.items[this.currentitem + this.slidesVisible] === undefined) {
                 nextButton.classList.add('slider_next--hidden')
             } else {
                 nextButton.classList.remove('slider_next--hidden')
@@ -102,12 +103,12 @@ class Slider {
         })
     }
 
-    createPagination () {
+    createPagination() {
         let pagination = this.createDivWithClass('pagination')
         let dots = []
         this.root.appendChild(pagination)
         // boucle pour generer les puce selon le nombre de slide existant
-        for (let i = 0; i < this.items.length; i= i + this.options.slidesToScroll){
+        for (let i = 0; i < this.items.length; i = i + this.options.slidesToScroll) {
             // creation des puces selon le nombre de slide
             let dot = this.createDivWithClass('pagination_dot')
             // ajout de l'evenement au click en appelant la methode goToItem
@@ -127,10 +128,11 @@ class Slider {
         })
     }
 
-    next () {
+    next() {
         this.gotToItem(this.currentitem + this.slidesToScroll)
     }
-    prev () {
+
+    prev() {
         this.gotToItem(this.currentitem - this.slidesToScroll)
     }
 
@@ -138,7 +140,7 @@ class Slider {
      *  Déplace le slider vers l'element ciblé
      * @param {number} index
      */
-    gotToItem (index) {
+    gotToItem(index) {
 
         if (index < 0) {
             index = this.items.length - this.slidesVisible
@@ -146,7 +148,7 @@ class Slider {
             index = 0
         }
         let translateX = index * -100 / this.items.length
-        this.container.style.transform = 'translate3d('+ translateX +'%, 0, 0)'
+        this.container.style.transform = 'translate3d(' + translateX + '%, 0, 0)'
         this.currentitem = index
         this.onMoveCallbacs.forEach(cb => cb(index))
     }
@@ -155,7 +157,7 @@ class Slider {
      *
      * @param {moveCallback} cb
      */
-    onMove (cb) {
+    onMove(cb) {
         this.onMoveCallbacs.push(cb)
     }
 
@@ -164,25 +166,57 @@ class Slider {
      * @param {sting} className
      * @return {HTMLElement}
      */
-    createDivWithClass (className) {
+    createDivWithClass(className) {
         let div = document.createElement('div')
         div.setAttribute('class', className)
         return div
     }
-    get slidesToScroll () {
+
+    get slidesToScroll() {
         return this.isMobile ? 1 : this.options.slidesToScroll
     }
-    get slidesVisible () {
+
+    get slidesVisible() {
         return this.isMobile ? 1 : this.options.slidesVisible
     }
 }
 
-let cloneMenu = function () {
-    let menu = document.querySelector('.navigation ul')
-    let clone = menu.cloneNode(true)
-    clone.classList.add('mobile_menu')
-    return clone
+
+
+
+class MenuNav {
+    /**
+     *
+     * @param {HTMLElement} element (humberger element )
+     * @param {string} mobileMenu ( class to ul links on mobile )
+     */
+  constructor (element, mobileMenu) {
+    this.element = element
+    this.cloneMenu()
+    let content = this.element.parentNode.parentNode
+    content.appendChild(this.cloneMenu())
+    this.nav = mobileMenu
+    this.menuChild = document.querySelector(this.nav)
+    // mobile menu
+    this.element.addEventListener('click', (e)=> {
+        e.preventDefault()
+        this.element.classList.toggle('open')
+        this.menuChild.classList.toggle('open')
+    })
+  }
+
+    /**
+     * clone the menu
+     * @return {HTMLElement}
+     */
+  cloneMenu() {
+      let menu = document.querySelector('.navigation ul')
+      let clone = menu.cloneNode(true)
+      clone.classList.add('mobile_menu')
+      return clone
+  }
 }
+// execution
 document.addEventListener('DOMContentLoaded', function () {
     // slider
     new Slider(document.querySelector("#slider"),{
@@ -192,17 +226,6 @@ document.addEventListener('DOMContentLoaded', function () {
         pagination: true,
         navigation: true
     });
-
-    // mobile menu
-    let mobileMenu = document.querySelector('.humberger')
-    let content = mobileMenu.parentNode.parentNode
-    content.appendChild(cloneMenu())
-    let mobileNav = document.querySelector('.mobile_menu')
-    mobileMenu.addEventListener('click', function (e) {
-        e.preventDefault()
-        this.classList.toggle('open')
-        console.log(mobileNav)
-        mobileNav.classList.toggle('open')
-    })
+    new MenuNav(document.querySelector('.humberger'), '.mobile_menu')
 
 })
