@@ -182,9 +182,9 @@ class Slider {
 }
 
 
+// responsive menu
 
-
-class MenuNav {
+class MobileMenuNav {
     /**
      *
      * @param {HTMLElement} element (humberger element )
@@ -216,6 +216,41 @@ class MenuNav {
       return clone
   }
 }
+
+
+// scroll events
+
+class ScrollEvent {
+    constructor () {
+
+        this.wScrollY()
+        window.addEventListener('scroll',() => this.onScroll())
+
+    }
+    wScrollY () {
+        let supportPageOffset = window.pageXOffset !== undefined;
+        let isCSS1Compat = ((document.compatMode || "") === "CSS1Compat");
+        return supportPageOffset ? window.pageYOffset : isCSS1Compat ? document.documentElement.scrollTop : document.body.scrollTop
+    }
+    onScroll () {
+        let element = document.querySelector('nav')
+        let top = 100
+        console.log('top =' + top)
+        console.log('scroll =' + this.wScrollY())
+        let hasClass = element.classList.contains('light')
+        if (this.wScrollY() > top && !hasClass) {
+            element.style.background = '#ffffff'
+            element.classList.add('light')
+
+        } else {
+            element.style.background = 'transparent'
+            element.classList.remove('light')
+        }
+
+    }
+}
+
+
 // execution
 document.addEventListener('DOMContentLoaded', function () {
     // slider
@@ -226,6 +261,6 @@ document.addEventListener('DOMContentLoaded', function () {
         pagination: true,
         navigation: true
     });
-    new MenuNav(document.querySelector('.humberger'), '.mobile_menu')
-
+    new MobileMenuNav(document.querySelector('.humberger'), '.mobile_menu')
+    new ScrollEvent()
 })
